@@ -1,0 +1,38 @@
+<link rel="import" href="../polymer/polymer.html">
+
+<!--
+`paper-birthdate-picker`
+a birth date picker
+
+@demo demo/index.html 
+-->
+
+<dom-module id="paper-birthdate-picker">
+	<template>
+		<style>
+			:host {
+				display: block;
+
+				@apply(--layout-horizontal);
+				@apply(--layout-wrap);
+			}
+
+		</style>
+		<paper-dropdown-menu name="" label=""></paper-dropdown-menu>
+		<paper-dropdown-menu name="" label=""></paper-dropdown-menu>
+		<paper-dropdown-menu name="" label=""></paper-dropdown-menu>
+	</template>
+
+	<script>
+		Polymer({
+
+			is: 'paper-birthdate-picker',
+
+			properties: {
+				value: {
+					type: Object;
+				}
+			},
+		});
+	</script>
+</dom-module>
