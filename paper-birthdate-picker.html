@@ -166,7 +166,7 @@ a birth date picker
 			_onMonthSelected: function(event, detail){
 				this._setMonth(this.$.monthRepeater.itemForElement(this.$.monthListBox.selectedItem));
 				if(this.$.monthListBox.selectedItem && this.$.yearListBox.selectedItem){
-					this._setDays(this._computeDays(this.month, this.year));
+					this._setDays(this._computeDays(this.month, this.syear));
 				}
 			},
 
