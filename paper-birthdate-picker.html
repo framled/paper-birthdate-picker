@@ -89,25 +89,41 @@ a birth date picker
 					type: Number,
 					value: 2100
 				},
-
+				/*
+				 * array of days
+				 */
 				days:{
 					type: Array,
 					notify: true,
 					readOnly: true
 				},
-
-				_month: { 
-					type: String 
+				/*
+				 * month selected
+				 */
+				month: { 
+					type: String,
+					readOnly: true,
+					notify: true
 				},
-
-				_year:{
-					type: Number
+				/*
+				 * year selected
+				 */
+				year:{
+					type: Number,
+					readOnly: true,
+					notify: true
 				},
-
-				_day:{
-					type: Number
+				/*
+				 * day selected
+				 */
+				day:{
+					type: Number,
+					readOnly: true,
+					notify: true
 				},
-
+				/*
+				 * return date selected
+				 */
 				value:{
 					type: Date,
 					readOnly: true,
@@ -141,21 +157,21 @@ a birth date picker
 			},
 
 			_onYearSelected: function(event, detail){
-				this._year = this.$.yearRepeater.itemForElement(this.$.yearListBox.selectedItem);
+				this._setYear(this.$.yearRepeater.itemForElement(this.$.yearListBox.selectedItem));
 				if(this.$.monthListBox.selectedItem && this.$.yearListBox.selectedItem){
 					this._setDays(this._computeDays(this.month, this.year));
 				}
 			},
 
 			_onMonthSelected: function(event, detail){
-				this._month = this.$.monthRepeater.itemForElement(this.$.monthListBox.selectedItem);
+				this._setMonth(this.$.monthRepeater.itemForElement(this.$.monthListBox.selectedItem));
 				if(this.$.monthListBox.selectedItem && this.$.yearListBox.selectedItem){
-					this._setDays(this._computeDays(this._month, this._year));
+					this._setDays(this._computeDays(this.month, this.year));
 				}
 			},
 
 			_onDaySelected: function(event, detail){
-				this._day = this.$.dayRepeater.itemForElement(this.$.dayListBox.selectedItem);
+				this._setDay(this.$.dayRepeater.itemForElement(this.$.dayListBox.selectedItem));
 				let date = moment(this.month + "/" + this.day + "/"+ this.year, "MMMM/DD/YYYY").format("MM/DD/YYYY");
 				this._setValue(new Date(date));
 			},
@@ -167,18 +183,6 @@ a birth date picker
 					days.push(d);
 				}
 				return days;
-			},
-
-			get year(){
-				return this._year;
-			},
-
-			get month(){
-				return this._month;
-			},
-
-			get day(){
-				return this._day;
 			}
 		});
 	</script>
