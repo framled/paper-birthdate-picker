@@ -1,4 +1,9 @@
 <link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../moment-element/moment-import.html">
+<link rel="import" href="../moment-element/moment-with-locales-import.html">
+<link rel="import" href="../paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../paper-listbox/paper-listbox.html">
+<link rel="import" href="../paper-item/paper-item.html">
 
 <!--
 `paper-birthdate-picker`
@@ -16,11 +21,47 @@ a birth date picker
 				@apply(--layout-horizontal);
 				@apply(--layout-wrap);
 			}
+			
+			paper-dropdown-menu{
+				margin-right: 8px;
+			}
+			paper-dropdown-menu:nth-child(1){
+				width: 80px;
+			}
+
+			paper-dropdown-menu:nth-child(2){
+				width: 100px;
+			}
+
+			paper-dropdown-menu:nth-child(3){
+				width: 50px;
+			}
 
 		</style>
-		<paper-dropdown-menu name="" label=""></paper-dropdown-menu>
-		<paper-dropdown-menu name="" label=""></paper-dropdown-menu>
-		<paper-dropdown-menu name="" label=""></paper-dropdown-menu>
+		<paper-dropdown-menu name="year" label="[[y]]">
+			<paper-listbox id="yearListBox" class="dropdown-content" on-iron-select="_onSelectMonth">
+				<template id="yearRepeater" is="dom-repeat" items="{{_years}}">
+					<paper-item>[[item.year]]</paper-item>
+				</template>
+			</paper-listbox>
+		</paper-dropdown-menu>
+
+		<paper-dropdown-menu name="month" label="[[m]]">
+			<paper-listbox id="monthListBox" class="dropdown-content" on-iron-select="_onSelectMonth">
+				<template id="monthRepeater" is="dom-repeat" items=[[_months]]>
+					<paper-item>[[item]]</paper-item>
+				</template>
+			</paper-listbox>
+		</paper-dropdown-menu>
+		
+		<paper-dropdown-menu name="days" label="[[d]]">
+			<paper-listbox id="dayListbox" class="dropdown-content">
+				<template id="dayRepeater" is="dom-repeat" items=[[days]]>
+					<paper-item>[[item.day]]</paper-item>
+				</template>
+			</paper-listbox>
+		</paper-dropdown-menu>
+
 	</template>
 
 	<script>
@@ -29,10 +70,102 @@ a birth date picker
 			is: 'paper-birthdate-picker',
 
 			properties: {
-				value: {
-					type: Object;
+
+				locale:{
+					type: String,
+					value: 'es'
+				},
+
+				minYear:{
+					type: Number,
+					value: 1940
+				},
+
+				maxYear:{
+					type: Number,
+					value: 2100
+				},
+
+				_years: {
+					type: Array,
+					computed: '_computeYears(minYear, maxYear)',
+					readOnly: true
+				},
+
+				days:{
+					type: Array,
+					readOnly: true,
+					notify: true
+				},
+
+				_months:{
+					type: Array,
+					readOnly: true,
+					computed: '_computeMonth(locale)'
+				},
+
+				m: String,
+				y: String,
+				d: String
+			},
+
+			ready: function(){
+				moment.locale(this.locale);
+			},
+
+			/**
+			 * Compute the years array passed to the iron-list.
+			 */
+			_computeYears: function(min, max) {
+				if (typeof min !== 'number' || typeof max !== 'number') {
+					return;
+				}
+				let years = [];
+				for (;min <= max; min++) {
+					years.push({year: min});
+				}
+				return years;
+			},
+
+			_computeMonth: function(locale){
+				moment.locale(this.locale);
+				return moment.months().map(this._capitalizeFirstLetter);
+			},
+
+			_capitalizeFirstLetter: function(month){
+				return month.charAt(0).toUpperCase() + month.slice(1)
+			},
+
+			_onSelectMonth: function(event, detail){
+				if(this.$.monthListBox.selectedItem && this.$.yearListBox.selectedItem){
+					this._setDays(this._computeDays(this.month, this.year));
 				}
 			},
+
+			_computeDays: function(month, year){
+				let daysInMonth = moment(year + "-" + month, "YYYY-MMMM").daysInMonth();
+				let days = [];
+				for(let d = 1; d < daysInMonth; d++){
+					days.push({day: d});
+				}
+				return days;
+			},
+
+			apitalizeFirstLetter(string) {
+    			return string.charAt(0).toUpperCase() + string.slice(1);
+			},
+
+			get year(){
+				return this.$.yearRepeater.itemForElement(this.$.yearListBox.selectedItem);
+			},
+
+			get month(){
+				return this.$.monthRepeater.itemForElement(this.$.monthListBox.selectedItem);
+			},
+
+			get day(){
+				return this.$.dayRepeater.itemForElement(this.$.dayListBox.selectedItem);
+			}
 		});
 	</script>
 </dom-module>
