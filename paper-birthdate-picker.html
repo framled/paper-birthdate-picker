@@ -39,25 +39,25 @@ a birth date picker
 
 		</style>
 		<paper-dropdown-menu name="year" label="[[y]]">
-			<paper-listbox id="yearListBox" class="dropdown-content" on-iron-select="_onSelectMonth">
-				<template id="yearRepeater" is="dom-repeat" items="{{_years}}">
-					<paper-item>[[item.year]]</paper-item>
+			<paper-listbox id="yearListBox" class="dropdown-content" on-iron-select="_onYearSelected">
+				<template id="yearRepeater" is="dom-repeat" items="{{_computeYears(minYear, maxYear)}}">
+					<paper-item>[[item]]</paper-item>
 				</template>
 			</paper-listbox>
 		</paper-dropdown-menu>
 
 		<paper-dropdown-menu name="month" label="[[m]]">
-			<paper-listbox id="monthListBox" class="dropdown-content" on-iron-select="_onSelectMonth">
-				<template id="monthRepeater" is="dom-repeat" items=[[_months]]>
+			<paper-listbox id="monthListBox" class="dropdown-content" on-iron-select="_onMonthSelected">
+				<template id="monthRepeater" is="dom-repeat" items=[[_computeMonth(locale)]]>
 					<paper-item>[[item]]</paper-item>
 				</template>
 			</paper-listbox>
 		</paper-dropdown-menu>
 		
-		<paper-dropdown-menu name="days" label="[[d]]">
-			<paper-listbox id="dayListbox" class="dropdown-content">
-				<template id="dayRepeater" is="dom-repeat" items=[[days]]>
-					<paper-item>[[item.day]]</paper-item>
+		<paper-dropdown-menu name="days" label="[[d]]" on-iron-select="_onDaySelected">
+			<paper-listbox id="dayListBox" class="dropdown-content">
+				<template id="dayRepeater" is="dom-repeat" items="[[days]]">
+					<paper-item>[[item]]</paper-item>
 				</template>
 			</paper-listbox>
 		</paper-dropdown-menu>
@@ -75,42 +75,48 @@ a birth date picker
 					type: String,
 					value: 'es'
 				},
-
+				/*
+				 * start year
+				 */
 				minYear:{
 					type: Number,
 					value: 1940
 				},
-
+				/*
+				 * finish year
+				 */
 				maxYear:{
 					type: Number,
 					value: 2100
 				},
 
-				_years: {
+				days:{
 					type: Array,
-					computed: '_computeYears(minYear, maxYear)',
+					notify: true,
 					readOnly: true
 				},
 
-				days:{
-					type: Array,
-					readOnly: true,
-					notify: true
+				_month: { 
+					type: String 
 				},
 
-				_months:{
-					type: Array,
+				_year:{
+					type: Number
+				},
+
+				_day:{
+					type: Number
+				},
+
+				value:{
+					type: Date,
 					readOnly: true,
-					computed: '_computeMonth(locale)'
+					notify: true
 				},
 
 				m: String,
 				y: String,
 				d: String
-			},
-
-			ready: function(){
-				moment.locale(this.locale);
 			},
 
 			/**
@@ -122,49 +128,57 @@ a birth date picker
 				}
 				let years = [];
 				for (;min <= max; min++) {
-					years.push({year: min});
+					years.push(min);
 				}
 				return years;
 			},
 
 			_computeMonth: function(locale){
 				moment.locale(this.locale);
-				return moment.months().map(this._capitalizeFirstLetter);
+				return moment.months().map((month) => {
+					return month.charAt(0).toUpperCase() + month.slice(1);
+				});
 			},
 
-			_capitalizeFirstLetter: function(month){
-				return month.charAt(0).toUpperCase() + month.slice(1)
-			},
-
-			_onSelectMonth: function(event, detail){
+			_onYearSelected: function(event, detail){
+				this._year = this.$.yearRepeater.itemForElement(this.$.yearListBox.selectedItem);
 				if(this.$.monthListBox.selectedItem && this.$.yearListBox.selectedItem){
 					this._setDays(this._computeDays(this.month, this.year));
 				}
+			},
+
+			_onMonthSelected: function(event, detail){
+				this._month = this.$.monthRepeater.itemForElement(this.$.monthListBox.selectedItem);
+				if(this.$.monthListBox.selectedItem && this.$.yearListBox.selectedItem){
+					this._setDays(this._computeDays(this._month, this._year));
+				}
+			},
+
+			_onDaySelected: function(event, detail){
+				this._day = this.$.dayRepeater.itemForElement(this.$.dayListBox.selectedItem);
+				let date = moment(this.month + "/" + this.day + "/"+ this.year, "MMMM/DD/YYYY").format("MM/DD/YYYY");
+				this._setValue(new Date(date));
 			},
 
 			_computeDays: function(month, year){
 				let daysInMonth = moment(year + "-" + month, "YYYY-MMMM").daysInMonth();
 				let days = [];
 				for(let d = 1; d < daysInMonth; d++){
-					days.push({day: d});
+					days.push(d);
 				}
 				return days;
 			},
 
-			apitalizeFirstLetter(string) {
-    			return string.charAt(0).toUpperCase() + string.slice(1);
-			},
-
 			get year(){
-				return this.$.yearRepeater.itemForElement(this.$.yearListBox.selectedItem);
+				return this._year;
 			},
 
 			get month(){
-				return this.$.monthRepeater.itemForElement(this.$.monthListBox.selectedItem);
+				return this._month;
 			},
 
 			get day(){
-				return this.$.dayRepeater.itemForElement(this.$.dayListBox.selectedItem);
+				return this._day;
 			}
 		});
 	</script>
