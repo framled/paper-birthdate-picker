@@ -4,6 +4,7 @@
 <link rel="import" href="../paper-dropdown-menu/paper-dropdown-menu.html">
 <link rel="import" href="../paper-listbox/paper-listbox.html">
 <link rel="import" href="../paper-item/paper-item.html">
+<link rel="import" href="../iron-form-element-behavior.html/iron-form-element-behavior.html.html">
 
 <!--
 `paper-birthdate-picker`
@@ -125,8 +126,7 @@ a birth date picker
 				 * return date selected
 				 */
 				value:{
-					type: Date,
-					readOnly: true,
+					type: String,
 					notify: true
 				},
 
@@ -134,6 +134,10 @@ a birth date picker
 				y: String,
 				d: String
 			},
+
+			behaviors: [
+				Polymer.IronFormElementBehavior
+			],
 
 			/**
 			 * Compute the years array passed to the iron-list.
@@ -173,7 +177,7 @@ a birth date picker
 			_onDaySelected: function(event, detail){
 				this._setDay(this.$.dayRepeater.itemForElement(this.$.dayListBox.selectedItem));
 				let date = moment(this.month + "/" + this.day + "/"+ this.year, "MMMM/DD/YYYY").format("MM/DD/YYYY");
-				this._setValue(new Date(date));
+				this.value = new Date(date).toString();
 			},
 
 			_computeDays: function(month, year){
