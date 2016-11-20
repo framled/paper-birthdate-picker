@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+		<title>paper-birthdate-picker demo</title>
+
+		<script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+
+		<link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
+		<link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
+		<link rel="import" href="../paper-birthdate-picker.html">
+
+		<style is="custom-style" include="demo-pages-shared-styles">
+		</style>
+	</head>
+	<body>
+		<div class="vertical-section-container centered">
+			<h3>Basic paper-birthdate-picker demo</h3>
+			<demo-snippet>
+				<template>
+					<paper-birthdate-picker 
+						locale="es" 
+						label='{"day": "Día", "month": "Mes" , "year": "Año"}'
+						error-message='{"day": "error en el día", "month": "error en el mes", "year": "error en el año"}'
+						name="birthdate"
+						required>
+					</paper-birthdate-picker>
+				</template>
+			</demo-snippet>
+
+			<h3>Disabled paper-birthdate-picker demo</h3>
+			<demo-snippet>
+				<template>
+					<paper-birthdate-picker 
+						name="birthdate"
+						locale="es" 
+						label='{"day": "Día", "month": "Mes" , "year": "Año"}'
+						error-message='{"day": "error en el día", "month": "error en el mes", "year": "error en el año"}'
+						disabled>
+					</paper-birthdate-picker>
+				</template>
+			</demo-snippet>
+		</div>
+	</body>
+</html>

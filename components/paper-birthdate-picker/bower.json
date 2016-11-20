@@ -1,0 +1,34 @@
+{
+  "name": "paper-birthdate-picker",
+  "description": "a birth date picker",
+  "main": "paper-birthdate-picker.html",
+  "version": "0.2.0",
+  "authors": [
+    "Felipe Narvaez <fn.narvaezmichea@gmail.com>"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/framled/paper-birthdate-picker"
+  },
+  "keywords": [
+    "web-components",
+    "polymer",
+    "paper-dropdown-menu",
+    "date"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#^1.4.0",
+    "moment": "^2.16.0",
+    "moment-element": "bendavis78/moment-element#^1.1.1",
+    "paper-dropdown-menu": "PolymerElements/paper-dropdown-menu#^1.4.1",
+    "paper-item": "PolymerElements/paper-item#^1.2.1",
+    "paper-listbox": "PolymerElements/paper-listbox#^1.1.2",
+    "iron-form-element-behavior": "PolymerElements/iron-form-element-behavior#^1.0.6"
+  },
+  "devDependencies": {
+    "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
+    "iron-demo-helpers": "PolymerElements/iron-demo-helpers#^1.0.0",
+    "web-component-tester": "^4.0.0",
+    "webcomponentsjs": "webcomponents/webcomponentsjs#^0.7.0"
+  }
+}
