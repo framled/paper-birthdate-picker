@@ -4,7 +4,8 @@
 <link rel="import" href="../paper-dropdown-menu/paper-dropdown-menu.html">
 <link rel="import" href="../paper-listbox/paper-listbox.html">
 <link rel="import" href="../paper-item/paper-item.html">
-<link rel="import" href="../iron-form-element-behavior.html/iron-form-element-behavior.html.html">
+<link rel="import" href="../iron-form-element-behavior/iron-form-element-behavior.html">
+<link rel="import" href="../iron-validatable-behavior/iron-validatable-behavior.html">
 
 <!--
 `paper-birthdate-picker`
@@ -39,7 +40,17 @@ a birth date picker
 			}
 
 		</style>
-		<paper-dropdown-menu name="year" label="[[y]]">
+
+		<paper-dropdown-menu 
+			id="yearDropDown" 
+			name="year" 
+			label="[[label.year]]" 
+			error-message="[[errorMessage.year]]"
+			required="[[required]]"
+			disabled="[[disabled]]"
+			always-float-label="[[alwaysFloatLabel]]"
+			no-animations="[[noAnimations]]"
+			no-label-float="[[noLabelFloat]]">
 			<paper-listbox id="yearListBox" class="dropdown-content" on-iron-select="_onYearSelected">
 				<template id="yearRepeater" is="dom-repeat" items="{{_computeYears(minYear, maxYear)}}">
 					<paper-item>[[item]]</paper-item>
@@ -47,7 +58,16 @@ a birth date picker
 			</paper-listbox>
 		</paper-dropdown-menu>
 
-		<paper-dropdown-menu name="month" label="[[m]]">
+		<paper-dropdown-menu 
+			id="monthDropDown" 
+			name="month" 
+			label="[[label.month]]" 
+			error-message="[[errorMessage.month]]" 
+			required="[[required]]" 
+			disabled="[[disabled]]"
+			always-float-label="[[alwaysFloatLabel]]"
+			no-animations="[[noAnimations]]"
+			no-label-float="[[noLabelFloat]]">
 			<paper-listbox id="monthListBox" class="dropdown-content" on-iron-select="_onMonthSelected">
 				<template id="monthRepeater" is="dom-repeat" items=[[_computeMonth(locale)]]>
 					<paper-item>[[item]]</paper-item>
@@ -55,7 +75,17 @@ a birth date picker
 			</paper-listbox>
 		</paper-dropdown-menu>
 		
-		<paper-dropdown-menu name="days" label="[[d]]" on-iron-select="_onDaySelected">
+		<paper-dropdown-menu 
+			id="dayDropDown" 
+			name="day" 
+			label="[[label.day]]" 
+			error-message="[[errorMessage.day]]" 
+			on-iron-select="_onDaySelected"
+			required="[[required]]"
+			disabled="[[disabled]]"
+			always-float-label="[[alwaysFloatLabel]]"
+			no-animations="[[noAnimations]]"
+			no-label-float="[[noLabelFloat]]">
 			<paper-listbox id="dayListBox" class="dropdown-content">
 				<template id="dayRepeater" is="dom-repeat" items="[[days]]">
 					<paper-item>[[item]]</paper-item>
@@ -66,128 +96,155 @@ a birth date picker
 	</template>
 
 	<script>
-		Polymer({
+		(function() {
+			'use strict';
 
-			is: 'paper-birthdate-picker',
+			Polymer({
 
-			properties: {
+				is: 'paper-birthdate-picker',
 
-				locale:{
-					type: String,
-					value: 'es'
-				},
-				/*
-				 * start year
-				 */
-				minYear:{
-					type: Number,
-					value: 1940
-				},
-				/*
-				 * finish year
-				 */
-				maxYear:{
-					type: Number,
-					value: 2100
-				},
-				/*
-				 * array of days
-				 */
-				days:{
-					type: Array,
-					notify: true,
-					readOnly: true
-				},
-				/*
-				 * month selected
-				 */
-				month: { 
-					type: String,
-					readOnly: true,
-					notify: true
-				},
-				/*
-				 * year selected
-				 */
-				year:{
-					type: Number,
-					readOnly: true,
-					notify: true
-				},
-				/*
-				 * day selected
-				 */
-				day:{
-					type: Number,
-					readOnly: true,
-					notify: true
-				},
-				/*
-				 * return date selected
-				 */
-				value:{
-					type: String,
-					notify: true
+				properties: {
+
+					locale:{
+						type: String,
+						value: 'es'
+					},
+
+					errorMessage:{
+						type: String
+					},
+
+					disabled:{
+						type: Boolean,
+					},
+
+					alwaysFloatLabel:{
+						type: Boolean,
+						value: false
+					},
+
+					noAnimations:{
+						type: Boolean,
+						value: false
+					},
+
+					noLabelFloat:{
+						type: Boolean,
+						value: false
+					},
+					/*
+					 * start year
+					 */
+					minYear:{
+						type: Number,
+						value: 1940
+					},
+					/*
+					 * finish year
+					 */
+					maxYear:{
+						type: Number,
+						value: 2100
+					},
+					/*
+					 * array of days
+					 */
+					days:{
+						type: Array,
+						notify: true,
+						readOnly: true
+					},
+					/*
+					 * month selected
+					 */
+					month: { 
+						type: String,
+						readOnly: true,
+						notify: true
+					},
+					/*
+					 * year selected
+					 */
+					year:{
+						type: Number,
+						readOnly: true,
+						notify: true
+					},
+					/*
+					 * day selected
+					 */
+					day:{
+						type: Number,
+						readOnly: true,
+						notify: true
+					},
+
+					label: Object,
+
+					errorMessage: Object
 				},
 
-				m: String,
-				y: String,
-				d: String
-			},
+				behaviors: [
+					Polymer.IronFormElementBehavior,
+					Polymer.IronValidatableBehavior
+				],
 
-			behaviors: [
-				Polymer.IronFormElementBehavior
-			],
+				/**
+				 * Compute the years array passed to the iron-list.
+				 */
+				_computeYears: function(min, max) {
+					if (typeof min !== 'number' || typeof max !== 'number') {
+						return;
+					}
+					var years = [];
+					for (;min <= max; min++) {
+						years.push(min);
+					}
+					return years;
+				},
 
-			/**
-			 * Compute the years array passed to the iron-list.
-			 */
-			_computeYears: function(min, max) {
-				if (typeof min !== 'number' || typeof max !== 'number') {
-					return;
+				_computeMonth: function(locale){
+					moment.locale(this.locale);
+					return moment.months().map((month) => {
+						return month.charAt(0).toUpperCase() + month.slice(1);
+					});
+				},
+
+				_onYearSelected: function(event, detail){
+					this._setYear(this.$.yearRepeater.itemForElement(this.$.yearListBox.selectedItem));
+					if(this.$.monthListBox.selectedItem && this.$.yearListBox.selectedItem){
+						this._setDays(this._computeDays(this.month, this.year));
+					}
+				},
+
+				_onMonthSelected: function(event, detail){
+					this._setMonth(this.$.monthRepeater.itemForElement(this.$.monthListBox.selectedItem));
+					if(this.$.monthListBox.selectedItem && this.$.yearListBox.selectedItem){
+						this._setDays(this._computeDays(this.month, this.syear));
+					}
+				},
+
+				_onDaySelected: function(event, detail){
+					this._setDay(this.$.dayRepeater.itemForElement(this.$.dayListBox.selectedItem));
+					var date = moment(this.month + "/" + this.day + "/"+ this.year, "MMMM/DD/YYYY").format("MM/DD/YYYY");
+					this.value = new Date(date).toString();
+				},
+
+				_computeDays: function(month, year){
+					var daysInMonth = moment(year + "-" + month, "YYYY-MMMM").daysInMonth();
+					var days = [];
+					for(var d = 1; d < daysInMonth; d++){
+						days.push(d);
+					}
+					return days;
+				},
+
+				_getValidity: function() {
+					return this.$.yearDropDown.validate() && 
+						this.$.monthDropDown.validate() && 
+						this.$.dayDropDown.validate();
 				}
-				let years = [];
-				for (;min <= max; min++) {
-					years.push(min);
-				}
-				return years;
-			},
-
-			_computeMonth: function(locale){
-				moment.locale(this.locale);
-				return moment.months().map((month) => {
-					return month.charAt(0).toUpperCase() + month.slice(1);
-				});
-			},
-
-			_onYearSelected: function(event, detail){
-				this._setYear(this.$.yearRepeater.itemForElement(this.$.yearListBox.selectedItem));
-				if(this.$.monthListBox.selectedItem && this.$.yearListBox.selectedItem){
-					this._setDays(this._computeDays(this.month, this.year));
-				}
-			},
-
-			_onMonthSelected: function(event, detail){
-				this._setMonth(this.$.monthRepeater.itemForElement(this.$.monthListBox.selectedItem));
-				if(this.$.monthListBox.selectedItem && this.$.yearListBox.selectedItem){
-					this._setDays(this._computeDays(this.month, this.syear));
-				}
-			},
-
-			_onDaySelected: function(event, detail){
-				this._setDay(this.$.dayRepeater.itemForElement(this.$.dayListBox.selectedItem));
-				let date = moment(this.month + "/" + this.day + "/"+ this.year, "MMMM/DD/YYYY").format("MM/DD/YYYY");
-				this.value = new Date(date).toString();
-			},
-
-			_computeDays: function(month, year){
-				let daysInMonth = moment(year + "-" + month, "YYYY-MMMM").daysInMonth();
-				let days = [];
-				for(let d = 1; d < daysInMonth; d++){
-					days.push(d);
-				}
-				return days;
-			}
-		});
+			});
+		})();
 	</script>
 </dom-module>

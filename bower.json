@@ -2,7 +2,7 @@
   "name": "paper-birthdate-picker",
   "description": "a birth date picker",
   "main": "paper-birthdate-picker.html",
-  "version": "0.1.3",
+  "version": "0.2.0",
   "authors": [
     "Felipe Narvaez <fn.narvaezmichea@gmail.com>"
   ],

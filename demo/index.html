@@ -22,9 +22,23 @@
 				<template>
 					<paper-birthdate-picker 
 						locale="es" 
-						y="Año" 
-						d="Día" 
-						m="Mes">
+						label='{"day": "Día", "month": "Mes" , "year": "Año"}'
+						error-message='{"day": "error en el día", "month": "error en el mes", "year": "error en el año"}'
+						name="birthdate"
+						required>
+					</paper-birthdate-picker>
+				</template>
+			</demo-snippet>
+
+			<h3>Disabled paper-birthdate-picker demo</h3>
+			<demo-snippet>
+				<template>
+					<paper-birthdate-picker 
+						name="birthdate"
+						locale="es" 
+						label='{"day": "Día", "month": "Mes" , "year": "Año"}'
+						error-message='{"day": "error en el día", "month": "error en el mes", "year": "error en el año"}'
+						disabled>
 					</paper-birthdate-picker>
 				</template>
 			</demo-snippet>
