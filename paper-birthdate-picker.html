@@ -19,7 +19,9 @@ a birth date picker
 		<style>
 			:host {
 				display: block;
-
+				--year-picker-width: 80px;
+				--month-picker-width: 100px;
+				--day-picker-width: 50px;
 				@apply(--layout-horizontal);
 				@apply(--layout-wrap);
 			}
@@ -27,16 +29,16 @@ a birth date picker
 			paper-dropdown-menu{
 				margin-right: 8px;
 			}
-			paper-dropdown-menu:nth-child(1){
-				width: 80px;
+			paper-dropdown-menu[name="year"]{
+				width: var(--year-picker-width);
 			}
 
-			paper-dropdown-menu:nth-child(2){
-				width: 100px;
+			paper-dropdown-menu[name="month"]{
+				width: var(--month-picker-width);
 			}
 
-			paper-dropdown-menu:nth-child(3){
-				width: 50px;
+			paper-dropdown-menu[name="day"]{
+				width: var(--day-picker-width);
 			}
 
 		</style>
