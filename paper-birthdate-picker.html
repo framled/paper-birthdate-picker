@@ -199,8 +199,8 @@ a birth date picker
 						return;
 					}
 					var years = [];
-					for (;min <= max; min++) {
-						years.push(min);
+					for (;max >= min; max--) {
+						years.push(max);
 					}
 					return years;
 				},
