@@ -46,8 +46,8 @@ a birth date picker
 		<paper-dropdown-menu 
 			id="yearDropDown" 
 			name="year" 
-			label="[[label.year]]" 
-			error-message="[[errorMessage.year]]"
+			label="[[yearLabel]]" 
+			error-message="[[yearErrorMessage]]"
 			required="[[required]]"
 			disabled="[[disabled]]"
 			always-float-label="[[alwaysFloatLabel]]"
@@ -63,8 +63,8 @@ a birth date picker
 		<paper-dropdown-menu 
 			id="monthDropDown" 
 			name="month" 
-			label="[[label.month]]" 
-			error-message="[[errorMessage.month]]" 
+			label="[[monthLabel]]" 
+			error-message="[[monthErrorMessage]]" 
 			required="[[required]]" 
 			disabled="[[disabled]]"
 			always-float-label="[[alwaysFloatLabel]]"
@@ -80,8 +80,8 @@ a birth date picker
 		<paper-dropdown-menu 
 			id="dayDropDown" 
 			name="day" 
-			label="[[label.day]]" 
-			error-message="[[errorMessage.day]]" 
+			label="[[dayLabel]]" 
+			error-message="[[dayErrorMessage]]" 
 			on-iron-select="_onDaySelected"
 			required="[[required]]"
 			disabled="[[disabled]]"
@@ -181,9 +181,36 @@ a birth date picker
 						notify: true
 					},
 
-					label: Object,
+					yearLabel: {
+						type: String,
+						reflectToAttribute: true
+					},
 
-					errorMessage: Object
+					monthLabel: {
+						type: String,
+						reflectToAttribute: true
+					},
+
+					dayLabel: {
+						type: String,
+						reflectToAttribute: true
+					},
+
+					yearErrorMessage: {
+						type: String,
+						reflectToAttribute: true	
+					},
+
+					monthErrorMessage: {
+						type: String,
+						reflectToAttribute: true	
+					},
+
+					dayErrorMessage: {
+						type: String,
+						reflectToAttribute: true	
+					}
+					
 				},
 
 				behaviors: [
