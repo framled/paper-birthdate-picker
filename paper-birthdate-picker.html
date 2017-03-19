@@ -146,7 +146,9 @@ a birth date picker
 					 */
 					maxYear:{
 						type: Number,
-						value: 2100
+						value: function() {
+							return new Date().getFullYear();
+						}
 					},
 					/*
 					 * array of days
